@@ -1,6 +1,6 @@
 package com.example.architectureexample;
 
-import android.arch.persistence.room.ColumnInfo;
+
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -15,7 +15,6 @@ public class Note {
     private String description;
 
     private int priority;
-
 
     public Note(String title, String description, int priority) {
         this.title = title;
@@ -42,5 +41,4 @@ public class Note {
     public int getPriority() {
         return priority;
     }
-
 }
