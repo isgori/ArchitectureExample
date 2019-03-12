@@ -10,12 +10,14 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-public class AddNoteActivity extends AppCompatActivity {
-    public static final String EXTRA_TITLE=
+public class AddEditNoteActivity extends AppCompatActivity {
+    public static final String EXTRA_ID =
+            "com.example.architectureexample.EXTRA_ID";
+    public static final String EXTRA_TITLE =
             "com.example.architectureexample.EXTRA_TITLE";
-    public static final String EXTRA_DESCRIPTION=
+    public static final String EXTRA_DESCRIPTION =
             "com.example.architectureexample.EXTRA_DESCRIPTION";
-    public static final String EXTRA_PRIORITY=
+    public static final String EXTRA_PRIORITY =
             "com.example.architectureexample.EXTRA_PRIORITY";
     private EditText editTextTitle, editTextDescription;
     private NumberPicker numberPickerPriority;
@@ -32,26 +34,43 @@ public class AddNoteActivity extends AppCompatActivity {
         numberPickerPriority.setMaxValue(10);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add Note");
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_ID)) {
+            setTitle("Edit Note");
+            editTextTitle.setText(intent.getStringExtra(EXTRA_TITLE));
+            editTextDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION));
+            numberPickerPriority.setValue(intent.getIntExtra(EXTRA_PRIORITY, 1));
+        } else {
+            setTitle("Add Note");
+        }
     }
+
     private void saveNote() {
         String title = editTextTitle.getText().toString();
         String description = editTextDescription.getText().toString();
-        int priority= numberPickerPriority.getValue();
+        int priority = numberPickerPriority.getValue();
 
-        if (title.trim().isEmpty() || description.trim().isEmpty()){
-            Toast.makeText(this,"Please insert a title or description",Toast.LENGTH_SHORT).show();
+        if (title.trim().isEmpty() || description.trim().isEmpty()) {
+            Toast.makeText(this, "Please insert a title or description", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent data = new Intent();
-        data.putExtra(EXTRA_TITLE,title);
-        data.putExtra(EXTRA_DESCRIPTION,description);
-        data.putExtra(EXTRA_PRIORITY,priority);
+        data.putExtra(EXTRA_TITLE, title);
+        data.putExtra(EXTRA_DESCRIPTION, description);
+        data.putExtra(EXTRA_PRIORITY, priority);
 
-        setResult(RESULT_OK,data);
+        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        if (id != -1) {
+            data.putExtra(EXTRA_ID,id);
+        }
+
+
+        setResult(RESULT_OK, data);
         finish();
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
